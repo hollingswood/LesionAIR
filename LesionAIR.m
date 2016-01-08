@@ -19,7 +19,7 @@ drawnow;
 
 %Initialize PCB
 Treehopper('open');
-vBus = 5.019;
+vBus = 4.94;
 
 %Initialize Pins
 Treehopper('makeAnalogIn',1); %Pressure Transducer, Analog Read, Pin 1
@@ -50,7 +50,7 @@ src.Gain = 0; %Set ISO Gain
 src.AcquisitionFrameRateAbs = 5; %Set Frame Rate
 %src.ExposureTimeAbs = 60000; %*** BEST FOR STRUCTURED LIGHT
 src.ExposureTimeAbs = 20000; %*** BEST FOR VISIBLE LIGHT
-imaqmem(3000000000); %Set reserved memory
+%imaqmem(3000000000); %Set reserved memory
 handles.video.FramesPerTrigger = Inf; % Capture frames until we manually stop it
 
 %% Centering of Device
