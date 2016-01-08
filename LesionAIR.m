@@ -5,8 +5,8 @@ close all
 %% Initialization
 usrID = inputdlg('What is the user ID? ','User ID'); %Identify results
 DataFolder = usrID{:};
-dataDirPath = '../../Data/';
-splashDirPath = '../../Splash/';
+dataDirPath = 'C:\Users\Tyer\Desktop\LesionAIR\Data\';
+splashDirPath = 'Splash/';
 mkdir(dataDirPath,DataFolder);
 ResultsFolder = [dataDirPath,DataFolder];
 
@@ -181,7 +181,7 @@ VL6 = imread([ResultsFolder '/' usrID{:} '_VL_6.png']);
 SL6 = imread([ResultsFolder '/' usrID{:} '_SL_6.png']);
 L6 = [VL6 SL6];
 
-figure('Name','LesionAIR Images','Position', [0, 400, 1100, 750]);
+figure('Name','LesionAIR Images','Position', [50, 30, 1100, 750]);
 subplot_tight(3,2,1,.01)
 imshow(L1);
 title('Vacuum Pressure = 0.0 mbar','FontSize',18,'FontWeight','bold')
