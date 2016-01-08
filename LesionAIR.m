@@ -10,7 +10,7 @@ splashDirPath = '../../Splash/';
 mkdir(dataDirPath,DataFolder);
 ResultsFolder = [dataDirPath,DataFolder];
 
-figure('Name','LesionAIR Camera Preview','Position', [200, 100, 926, 692]);
+figureHandle = figure('Name','LesionAIR Camera Preview'); % ,'Position', [80, 80, 400, 200]);
 %hImage = imshow(['/Users/TylerWortman/Dropbox (MIT)/PhD Research/MATLAB/_LesionAIR Device/Splash/' num2str(floor(rand()*10)) '.jpg'],'Border','tight');
 hImage = imshow([splashDirPath num2str(9) '.jpg'],'Border','tight');
 
