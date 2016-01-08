@@ -5,12 +5,14 @@ close all
 %% Initialization
 usrID = inputdlg('What is the user ID? ','User ID'); %Identify results
 DataFolder = usrID{:};
-mkdir('/Users/TylerWortman/Dropbox (MIT)/PhD Research/MATLAB/_LesionAIR Device/Data',DataFolder);
-ResultsFolder = ['/Users/TylerWortman/Dropbox (MIT)/PhD Research/MATLAB/_LesionAIR Device/Data/',DataFolder];
+dataDirPath = '../../Data/';
+splashDirPath = '../../Splash/';
+mkdir(dataDirPath,DataFolder);
+ResultsFolder = [dataDirPath,DataFolder];
 
 figure('Name','LesionAIR Camera Preview','Position', [200, 100, 926, 692]);
 %hImage = imshow(['/Users/TylerWortman/Dropbox (MIT)/PhD Research/MATLAB/_LesionAIR Device/Splash/' num2str(floor(rand()*10)) '.jpg'],'Border','tight');
-hImage = imshow(['/Users/TylerWortman/Dropbox (MIT)/PhD Research/MATLAB/_LesionAIR Device/Splash/' num2str(9) '.jpg'],'Border','tight');
+hImage = imshow([splashDirPath num2str(9) '.jpg'],'Border','tight');
 
 txt = uicontrol('Style','text','Position',[0 0 926 60],'String','Initializing Lesionair and Treehopper Pins','FontSize',24,'FontName','Helvetica Neue','FontWeight','Light');
 drawnow;
