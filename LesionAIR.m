@@ -23,7 +23,7 @@ drawnow;
 
 %Initialize PCB
 Treehopper('open');
-vBus = 4.944;
+vBus = 4.895;
 
 %Initialize Pins
 Treehopper('makeAnalogIn',1); %Pressure Transducer, Analog Read, Pin 1
@@ -79,7 +79,7 @@ drawnow;
 % th = 0:pi/50:2*pi;
 % xunit = r * cos(th) + x;
 % yunit = r * sin(th) + y;
-set(txt,'String','Center Image over the Region of Interest. Press Button to Start');
+set(txt,'String','Center Region of Interest within Red Dots. Press Button to Start');
 % plot(xunit, yunit,'LineWidth',3);
 preview(vid, hImage);
 uicontrol('Style','text','Position',[450 450 8 8],'String','','BackgroundColor','r');
@@ -131,15 +131,15 @@ for i=1:6
     
     %Record Pressure
     disp('Recording Pressure');
-    PressureVoltage(i) = Treehopper('analogReadVoltage',1); %Record Ambient Pressure, Value = 0-5
+    PressureVoltage(i) = Treehopper('analogReadVoltage',1)*1.03; %Record Ambient Pressure, Value = 0-5
     Pressure(i) = (PressureVoltage(i)/vBus)*1013.25; %Normalize Pressure Value = 0-1 %Conversion to millibars
     disp(['Pressure is: ' num2str(Pressure(i))]);
     
     %Apply 20mbar Vacuum
     disp('Vacuum Pump On');
     Treehopper('digitalWrite',6,true)
-    while ((Treehopper('analogReadVoltage',1)/vBus)*1013.25)>(Pressure(1)-20*(i))
-        set(txt,'String',['Current Pressure: ' num2str((Treehopper('analogReadVoltage',1)/vBus)*1013.25)]);
+    while (((Treehopper('analogReadVoltage',1)*1.03)/vBus)*1013.25)>(Pressure(1)-20*(i))
+        set(txt,'String',['Current Pressure: ' num2str(((Treehopper('analogReadVoltage',1)*1.03)/vBus)*1013.25)]);
         drawnow;
         pause(0.1);
     end

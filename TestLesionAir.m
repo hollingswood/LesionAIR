@@ -1,12 +1,12 @@
 %Initialize PCB
-%Treehopper('open');
+Treehopper('open');
 
 %Initialize Pins
 Treehopper('makeAnalogIn',1); %Pressure Transducer, Analog Read, Pin 1
 Treehopper('makeDigitalOut',6); %Vacuum Pump, Digital Out, Pin 6
 Treehopper('digitalWrite', 6, false); %True/High to Turn off Pump
 Treehopper('makeDigitalOut',8); %Projector On/Off, Digital Out, Pin 8, True to turn off LED
-Treehopper('digitalWrite', 8, true); %True/High to Turn off LED
+Treehopper('digitalWrite', 8, false); %True/High to Turn off LED
 %Treehopper('digitalWrite', 8, false); %Turn On Projector LED
 Treehopper('makePWM',2); %Projector Brightness, Increase Duty Cycle to Dim
 Treehopper('makeDigitalOut',5); %Ring Light, Digital Out, Pin 5
@@ -32,16 +32,16 @@ xlabel('Time (s)')
 ylabel('Pressure (mbar)')
 Treehopper('digitalWrite', 6, true);
 for i=1:20
-x(i)=Treehopper('analogReadVoltage',1)/5*1013.25;
+x(i)=Treehopper('analogReadVoltage',1)%/5*1013.25;
 plot(x)
 drawnow
 pause(0.5);
 end
 Treehopper('digitalWrite', 6, false);
-for i=20:40
-x(i)=Treehopper('analogReadVoltage',1)/5*1013.25;
-plot(x)
-drawnow
-pause(0.5);
-end
+% for i=20:40
+% x(i)=Treehopper('analogReadVoltage',1)/5*1013.25;
+% plot(x)
+% drawnow
+% pause(0.5);
+% end
 
