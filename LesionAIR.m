@@ -13,6 +13,10 @@ ResultsFolder = [dataDirPath,DataFolder];
 figureHandle = figure('Name','LesionAIR Camera Preview'); % ,'Position', [80, 80, 400, 200]);
 %hImage = imshow(['/Users/TylerWortman/Dropbox (MIT)/PhD Research/MATLAB/_LesionAIR Device/Splash/' num2str(floor(rand()*10)) '.jpg'],'Border','tight');
 hImage = imshow([splashDirPath num2str(9) '.jpg'],'Border','tight');
+figureHandle.Position(1)=180;
+figureHandle.Position(2)=80;
+figureHandle.Position(3)=926;
+figureHandle.Position(4)=693;
 
 txt = uicontrol('Style','text','Position',[0 0 926 60],'String','Initializing Lesionair and Treehopper Pins','FontSize',24,'FontName','Helvetica Neue','FontWeight','Light');
 drawnow;
