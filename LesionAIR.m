@@ -13,7 +13,7 @@ ResultsFolder = [dataDirPath,DataFolder];
 figureHandle = figure('Name','LesionAIR Camera Preview'); % ,'Position', [80, 80, 400, 200]);
 %hImage = imshow(['/Users/TylerWortman/Dropbox (MIT)/PhD Research/MATLAB/_LesionAIR Device/Splash/' num2str(floor(rand()*10)) '.jpg'],'Border','tight');
 hImage = imshow([splashDirPath num2str(9) '.jpg'],'Border','tight');
-figureHandle.Position(1)=180;
+figureHandle.Position(1)=300;
 figureHandle.Position(2)=80;
 figureHandle.Position(3)=926;
 figureHandle.Position(4)=693;
@@ -23,7 +23,7 @@ drawnow;
 
 %Initialize PCB
 Treehopper('open');
-vBus = 4.94;
+vBus = 4.944;
 
 %Initialize Pins
 Treehopper('makeAnalogIn',1); %Pressure Transducer, Analog Read, Pin 1
@@ -113,7 +113,7 @@ for i=1:6
     disp('Projector On');
     Treehopper('digitalWrite', 8, true);
     disp('Capturing Structured Light Image');
-    src.ExposureTimeAbs = 150000; %%% CODE TO CAPTURE IMAGE Fully bright LED = 80000
+    src.ExposureTimeAbs = 350000; %%% CODE TO CAPTURE IMAGE Fully bright LED = 80000
     pause(0.5);
     SLimg=getsnapshot(vid);
     imwrite(SLimg,[ResultsFolder '/' usrID{:} '_SL_' num2str(i) '.png'],'png');
