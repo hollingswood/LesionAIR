@@ -24,10 +24,11 @@ vBus = 4.94;
 %Initialize Pins
 Treehopper('makeAnalogIn',1); %Pressure Transducer, Analog Read, Pin 1
 Treehopper('makeDigitalOut',6); %Vacuum Pump, Digital Out, Pin 6
-% Treehopper('digitalWrite', 6, false); %False/Low to Turn off Pump
+Treehopper('digitalWrite', 6, false); %False/Low to Turn off Pump
 Treehopper('makeDigitalOut',8); %Projector On/Off, Digital Out, Pin 8, True to turn off LED
-% Treehopper('digitalWrite', 8, false); %False/Low to Turn off LED
+Treehopper('digitalWrite', 8, false); %False/Low to Turn off LED
 Treehopper('makePWM',2); %Projector Brightness, Increase Duty Cycle to Dim
+Treehopper('pwmWrite',2,0); %0 = brightest, 1 = dimmest
 Treehopper('makeDigitalOut',5); %Ring Light, Digital Out, Pin 5
 
 %Initialize Button
