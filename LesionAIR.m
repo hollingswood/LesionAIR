@@ -24,9 +24,9 @@ vBus = 4.94;
 %Initialize Pins
 Treehopper('makeAnalogIn',1); %Pressure Transducer, Analog Read, Pin 1
 Treehopper('makeDigitalOut',6); %Vacuum Pump, Digital Out, Pin 6
-Treehopper('digitalWrite', 6, false); %False/Low to Turn off Pump
+% Treehopper('digitalWrite', 6, false); %False/Low to Turn off Pump
 Treehopper('makeDigitalOut',8); %Projector On/Off, Digital Out, Pin 8, True to turn off LED
-Treehopper('digitalWrite', 8, true); %True/High to Turn off LED
+% Treehopper('digitalWrite', 8, false); %False/Low to Turn off LED
 Treehopper('makePWM',2); %Projector Brightness, Increase Duty Cycle to Dim
 Treehopper('makeDigitalOut',5); %Ring Light, Digital Out, Pin 5
 
@@ -106,14 +106,14 @@ for i=1:6
     disp('Ring Light Off');
     Treehopper('digitalWrite',5,false);
     disp('Projector On');
-    Treehopper('digitalWrite', 8, false);
+    Treehopper('digitalWrite', 8, true);
     disp('Capturing Structured Light Image');
-    src.ExposureTimeAbs = 80000; %%% CODE TO CAPTURE IMAGE
+    src.ExposureTimeAbs = 150000; %%% CODE TO CAPTURE IMAGE Fully bright LED = 80000
     pause(0.5);
     SLimg=getsnapshot(vid);
     imwrite(SLimg,[ResultsFolder '/' usrID{:} '_SL_' num2str(i) '.png'],'png');
     disp('Projector Off');
-    Treehopper('digitalWrite', 8, true);
+    Treehopper('digitalWrite', 8, false);
     
     %Visible Light Image
     disp('Ring Light On');
