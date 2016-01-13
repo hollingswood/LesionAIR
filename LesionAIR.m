@@ -36,13 +36,14 @@ Treehopper('pwmWrite',2,0); %0 = brightest, 1 = dimmest
 Treehopper('makeDigitalOut',5); %Ring Light, Digital Out, Pin 5
 
 %Initialize Button
-Treehopper('makeDigitalOut', 10);
-Treehopper('digitalWrite', 10, true); %Pin 3 is normally pulled high
+Treehopper('makeDigitalOut', 7);
+Treehopper('digitalWrite', 7, true); 
  
-Treehopper('makeDigitalOut', 9);
-Treehopper('digitalWrite', 9, false);
+Treehopper('makeDigitalOut', 3);
+Treehopper('digitalWrite', 3, false);
  
-Treehopper('makeDigitalIn', 3);
+Treehopper('makeDigitalIn', 11);
+Treehopper('makeDigitalIn', 9);
 
 %Initialize Camera
 set(txt,'String','Initializing Camera...');
@@ -89,7 +90,7 @@ uicontrol('Style','text','Position',[550 450 8 8],'String','','BackgroundColor',
 drawnow;
 
 %% Start
-    while Treehopper('digitalRead', 3) == 1 %When button is pressed Pin 3 goes low
+    while Treehopper('digitalRead', 11) == 1 %When button is pressed Pin 3 goes low
     pause(0.1);
     end
    
@@ -132,14 +133,14 @@ for i=1:6
     %Record Pressure
     disp('Recording Pressure');
     PressureVoltage(i) = Treehopper('analogReadVoltage',1)*1.03; %Record Ambient Pressure, Value = 0-5
-    Pressure(i) = (PressureVoltage(i)/vBus)*1013.25; %Normalize Pressure Value = 0-1 %Conversion to millibars
+    Pressure(i) = ((PressureVoltage(i)/5)*vBus)*1013.25/5; %Normalize Pressure Value = 0-1 %Conversion to millibars
     disp(['Pressure is: ' num2str(Pressure(i))]);
     
     %Apply 20mbar Vacuum
     disp('Vacuum Pump On');
     Treehopper('digitalWrite',6,true)
-    while (((Treehopper('analogReadVoltage',1)*1.03)/vBus)*1013.25)>(Pressure(1)-20*(i))
-        set(txt,'String',['Current Pressure: ' num2str(((Treehopper('analogReadVoltage',1)*1.03)/vBus)*1013.25)]);
+    while ((((Treehopper('analogReadVoltage',1)*1.03)/5)*vBus)*1013.25/5)>(Pressure(1)-20*(i))
+        set(txt,'String',['Current Pressure: ' num2str((((Treehopper('analogReadVoltage',1)*1.03)/5)*vBus)*1013.25/5)]);
         drawnow;
         pause(0.1);
     end
