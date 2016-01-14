@@ -23,7 +23,6 @@ drawnow;
 
 %Initialize PCB
 Treehopper('open');
-vBus = 4.895;
 
 %Initialize Pins
 Treehopper('makeAnalogIn',1); %Pressure Transducer, Analog Read, Pin 1
@@ -34,16 +33,22 @@ Treehopper('digitalWrite', 8, false); %False/Low to Turn off LED
 Treehopper('makePWM',2); %Projector Brightness, Increase Duty Cycle to Dim
 Treehopper('pwmWrite',2,0); %0 = brightest, 1 = dimmest
 Treehopper('makeDigitalOut',5); %Ring Light, Digital Out, Pin 5
+Treehopper('makeAnalogIn',7); %Zener Diode Reference
 
 %Initialize Button
-Treehopper('makeDigitalOut', 7);
-Treehopper('digitalWrite', 7, true); 
+Treehopper('makeDigitalOut', 10);
+Treehopper('digitalWrite', 10, true); 
  
-Treehopper('makeDigitalOut', 3);
-Treehopper('digitalWrite', 3, false);
+Treehopper('makeDigitalOut', 11);
+Treehopper('digitalWrite', 11, false);
  
-Treehopper('makeDigitalIn', 11);
-Treehopper('makeDigitalIn', 9);
+Treehopper('makeDigitalIn', 3);
+
+%Set vBus
+vBus = 3.288/(Treehopper('analogReadVoltage',7)/5);
+
+%Voltage Divider Ratio
+voltageDividerRatio = 1.04745;
 
 %Initialize Camera
 set(txt,'String','Initializing Camera...');
@@ -90,10 +95,31 @@ uicontrol('Style','text','Position',[550 450 8 8],'String','','BackgroundColor',
 drawnow;
 
 %% Start
-    while Treehopper('digitalRead', 11) == 1 %When button is pressed Pin 3 goes low
+if Treehopper('digitalRead',3) == 0
+    button = questdlg('There was a problem communicating with the button.  How would you like to start the test?','LesionAIR Button Start','Start now','Start in 10 seconds','Cancel','Cancel');
+    switch button
+        case 'Start now'
+        case 'Cancel'
+            Treehopper('close')
+            return
+        otherwise
+            for i = 10:-1:1
+                set(txt,'String',['Starting in ' num2str(i) ' seconds']);
+                pause(1)
+            end
+    end
+
+else
+
+    while Treehopper('digitalRead', 3) == 1 %When button is pressed Pin 3 goes low
     pause(0.1);
     end
-   
+end    
+
+% Treehopper('digitalWrite',5,false);
+% Treehopper('close')
+% return
+
 set(txt,'String','Turning off Ring Light');
 drawnow;
 Treehopper('digitalWrite',5,false);
@@ -132,15 +158,15 @@ for i=1:6
     
     %Record Pressure
     disp('Recording Pressure');
-    PressureVoltage(i) = Treehopper('analogReadVoltage',1)*1.03; %Record Ambient Pressure, Value = 0-5
+    PressureVoltage(i) = Treehopper('analogReadVoltage',1)*voltageDividerRatio; %Record Ambient Pressure, Value = 0-5
     Pressure(i) = ((PressureVoltage(i)/5)*vBus)*1013.25/5; %Normalize Pressure Value = 0-1 %Conversion to millibars
     disp(['Pressure is: ' num2str(Pressure(i))]);
     
     %Apply 20mbar Vacuum
     disp('Vacuum Pump On');
     Treehopper('digitalWrite',6,true)
-    while ((((Treehopper('analogReadVoltage',1)*1.03)/5)*vBus)*1013.25/5)>(Pressure(1)-20*(i))
-        set(txt,'String',['Current Pressure: ' num2str((((Treehopper('analogReadVoltage',1)*1.03)/5)*vBus)*1013.25/5)]);
+    while ((((Treehopper('analogReadVoltage',1)*voltageDividerRatio)/5)*vBus)*1013.25/5)>(Pressure(1)-20*(i))
+        set(txt,'String',['Current Pressure: ' num2str((((Treehopper('analogReadVoltage',1)*voltageDividerRatio)/5)*vBus)*1013.25/5)]);
         drawnow;
         pause(0.1);
     end
@@ -187,7 +213,7 @@ VL6 = imread([ResultsFolder '/' usrID{:} '_VL_6.png']);
 SL6 = imread([ResultsFolder '/' usrID{:} '_SL_6.png']);
 L6 = [VL6 SL6];
 
-figure('Name','LesionAIR Images','Position', [50, 30, 1100, 750]);
+total = figure('Name','LesionAIR Images','Position', [50, 30, 1100, 750]);
 subplot_tight(3,2,1,.01)
 imshow(L1);
 title('Vacuum Pressure = 0.0 mbar','FontSize',18,'FontWeight','bold')
@@ -206,3 +232,5 @@ title(['Vacuum Pressure = ' num2str(Pressure(1)-Pressure(5),'%.1f') ' mbar'],'Fo
 subplot_tight(3,2,6,.01)
 imshow(L6);
 title(['Vacuum Pressure = ' num2str(Pressure(1)-Pressure(6),'%.1f') ' mbar'],'FontSize',18,'FontWeight','bold')
+
+saveas(gcf,[ResultsFolder '/' usrID{:} '_Total.png'])
