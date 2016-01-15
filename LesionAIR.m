@@ -50,6 +50,17 @@ vBus = 3.288/(Treehopper('analogReadVoltage',7)/5);
 %Voltage Divider Ratio
 voltageDividerRatio = 1.04745;
 
+%Save vBus and pressure voltage
+log = fopen([ResultsFolder '/' usrID{:} '_log.txt'],'w');
+fprintf(log,'%6s %12s\r\n','vBus =');
+fprintf(log,'%6s %12s\r\n',num2str(vBus));
+fprintf(log,'%6s %12s\r\n','Pressure Voltage =');
+fprintf(log,'%6s %12s\r\n',num2str(Treehopper('analogReadVoltage',1)));
+if Treehopper('analogReadVoltage',1) > 4.98
+    fprintf(log,'%6s %12s\r\n','WARNING: Treehopper ADC is fully saturated. Pressure readings may be incorrect.');
+end
+fclose(log);
+
 %Initialize Camera
 set(txt,'String','Initializing Camera...');
 drawnow;
@@ -163,7 +174,8 @@ for i=1:6
     %Apply 20mbar Vacuum
     disp('Vacuum Pump On');
     Treehopper('digitalWrite',6,true)
-    while ((((Treehopper('analogReadVoltage',1)*voltageDividerRatio)/5)*vBus)*1013.25/5)>(Pressure(1)-20*(i))
+    if Treehopper('digitalRead', 3) == 1
+        while ((((Treehopper('analogReadVoltage',1)*voltageDividerRatio)/5)*vBus)*1013.25/5)>(Pressure(1)-20*(i))
         set(txt,'String',['Current Pressure: ' num2str((((Treehopper('analogReadVoltage',1)*voltageDividerRatio)/5)*vBus)*1013.25/5)]);
         drawnow;
         pause(0.1);
@@ -176,7 +188,16 @@ for i=1:6
             clc
             return
         end
+        end
+    else
+        while ((((Treehopper('analogReadVoltage',1)*voltageDividerRatio)/5)*vBus)*1013.25/5)>(Pressure(1)-20*(i))
+        set(txt,'String',['Current Pressure: ' num2str((((Treehopper('analogReadVoltage',1)*voltageDividerRatio)/5)*vBus)*1013.25/5)]);
+        drawnow;
+        pause(0.1);
+        end
     end
+    
+    
     %pause(3.5);
     disp('Vacuum Pump Off');
     Treehopper('digitalWrite',6,false)
