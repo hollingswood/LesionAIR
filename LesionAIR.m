@@ -108,9 +108,7 @@ if Treehopper('digitalRead',3) == 0
                 pause(1)
             end
     end
-
 else
-
     while Treehopper('digitalRead', 3) == 1 %When button is pressed Pin 3 goes low
     pause(0.1);
     end
@@ -169,6 +167,15 @@ for i=1:6
         set(txt,'String',['Current Pressure: ' num2str((((Treehopper('analogReadVoltage',1)*voltageDividerRatio)/5)*vBus)*1013.25/5)]);
         drawnow;
         pause(0.1);
+        if Treehopper('digitalRead', 3) == 0
+            Treehopper('digitalWrite',6,false); %Ring light off
+            Treehopper('digitalWrite',5,false); %Pump off
+            Treehopper('close')
+            close all
+            clear all
+            clc
+            return
+        end
     end
     %pause(3.5);
     disp('Vacuum Pump Off');
