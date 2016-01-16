@@ -149,7 +149,7 @@ for i=1:6
     disp('Projector On');
     Treehopper('digitalWrite', 8, true);
     disp('Capturing Structured Light Image');
-    src.ExposureTimeAbs = 350000; %%% CODE TO CAPTURE IMAGE Fully bright LED = 80000
+    src.ExposureTimeAbs = 380000; %%% CODE TO CAPTURE IMAGE Fully bright LED = 80000
     pause(0.5);
     SLimg=getsnapshot(vid);
     imwrite(SLimg,[ResultsFolder '/' usrID{:} '_SL_' num2str(i) '.png'],'png');
@@ -176,24 +176,28 @@ for i=1:6
     Treehopper('digitalWrite',6,true)
     if Treehopper('digitalRead', 3) == 1
         while ((((Treehopper('analogReadVoltage',1)*voltageDividerRatio)/5)*vBus)*1013.25/5)>(Pressure(1)-20*(i))
-        set(txt,'String',['Current Pressure: ' num2str((((Treehopper('analogReadVoltage',1)*voltageDividerRatio)/5)*vBus)*1013.25/5)]);
-        drawnow;
-        pause(0.1);
-        if Treehopper('digitalRead', 3) == 0
-            Treehopper('digitalWrite',6,false); %Ring light off
-            Treehopper('digitalWrite',5,false); %Pump off
-            Treehopper('close')
-            close all
-            clear all
-            clc
-            return
-        end
+            set(txt,'String',['Current Pressure: ' num2str((((Treehopper('analogReadVoltage',1)*voltageDividerRatio)/5)*vBus)*1013.25/5)]);
+            drawnow;
+            pause(0.1);
+            if Treehopper('digitalRead', 3) == 0
+                Treehopper('digitalWrite',6,false); %Ring light off
+                Treehopper('digitalWrite',5,false); %Pump off
+                save([ResultsFolder '/' usrID{:} '_Pressure.txt'],'Pressure','-ascii','-tabs') %Save Pressure Readings to Text File
+                set(txt,'String','Terminating connection to LesionAIR');
+                drawnow;
+                closepreview(vid);
+                Treehopper('close');
+                close all
+                clear all
+                clc
+                exit
+            end
         end
     else
         while ((((Treehopper('analogReadVoltage',1)*voltageDividerRatio)/5)*vBus)*1013.25/5)>(Pressure(1)-20*(i))
-        set(txt,'String',['Current Pressure: ' num2str((((Treehopper('analogReadVoltage',1)*voltageDividerRatio)/5)*vBus)*1013.25/5)]);
-        drawnow;
-        pause(0.1);
+            set(txt,'String',['Current Pressure: ' num2str((((Treehopper('analogReadVoltage',1)*voltageDividerRatio)/5)*vBus)*1013.25/5)]);
+            drawnow;
+            pause(0.1);
         end
     end
     
@@ -262,3 +266,4 @@ imshow(L6);
 title(['Vacuum Pressure = ' num2str(Pressure(1)-Pressure(6),'%.1f') ' mbar'],'FontSize',18,'FontWeight','bold')
 
 saveas(gcf,[ResultsFolder '/' usrID{:} '_Total.png'])
+exit
