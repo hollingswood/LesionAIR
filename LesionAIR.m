@@ -171,6 +171,10 @@ for i=1:6
     Pressure(i) = ((PressureVoltage(i)/5)*vBus)*1013.25/5; %Normalize Pressure Value = 0-1 %Conversion to millibars
     disp(['Pressure is: ' num2str(Pressure(i))]);
     
+    if i ==6
+        break
+    end
+    
     %Apply 20mbar Vacuum
     disp('Vacuum Pump On');
     Treehopper('digitalWrite',6,true)
